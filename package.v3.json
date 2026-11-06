@@ -1,0 +1,23 @@
+{
+  "CureTMDbAnimeShy": {
+    "name": "CTMDbA魔改版",
+    "description": "对 TMDb 上被合并为一季的番剧进行季信息分离，优先使用 TVDB 拆分依据。（小k自用版）",
+    "icon": "https://raw.githubusercontent.com/ifsherlock/moviepilot-curetmdbanimeshy/main/icons/curetmdbanimeshy.png",
+    "version": "0.0.9",
+    "author": "Attente,shyblacktea",
+    "level": 1,
+    "system_version": ">=3.0.0",
+    "release": true,
+    "history": {
+      "v0.0.9": "独立仓库维护；修复当前 MoviePilot 搜索最终匹配失败：透传 season_episodes 等宿主参数，保留季集范围判断和既有修正行为。",
+      "v0.0.8": "修复 v0.0.7 引入的严重问题：排除关键词检查被插入 correct_meta 中间，导致季集修正逻辑全部变成不可达代码；恢复完整修正流程，并新增下载历史季集优先采用。",
+      "v0.0.7": "新增识别排除：命中的标题跳过本插件的识别增强，不影响 MoviePilot 自身识别与下载。",
+      "v0.0.6": "修复未定档集次的空播出日期比较导致订阅刷新中断。",
+      "v0.0.5": "支持优先使用来源分季、刷新来源缓存和上传本地来源文件，整合配置页面。",
+      "v0.0.4": "修复同步、异步识别接口季集修正未触发，兼容结构化季集对象。",
+      "v0.0.3": "服务日志分级、凭据脱敏，移除 debug 启动参数。",
+      "v0.0.2": "适配 CureTMDbAnime 2.4.0 的 TVDB 拆分逻辑，服务版本更新至 1.4.0。",
+      "v0.0.1": "迁移到 MoviePilot V3，使用独立插件 ID CureTMDbAnimeShy。"
+    }
+  }
+}

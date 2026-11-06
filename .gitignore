@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.env
+*.log
+*.zip
+build/
+dist/
+outputs/
+product.md
+AGENTS.md

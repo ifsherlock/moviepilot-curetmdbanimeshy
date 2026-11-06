@@ -1,0 +1,52 @@
+name: 验证与发布
+
+on:
+  push:
+    branches: [main]
+    tags: [CureTMDbAnimeShy_v*]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: 安装测试依赖
+        run: python -m pip install 'pytest>=8,<10' 'ruff>=0.14,<1'
+      - name: 回归测试
+        run: python -m pytest tests -q
+      - name: 语法与必要静态检查
+        run: |
+          python -m ruff check --select E9,F63,F7,F82 plugins.v3 tests scripts
+          python -m compileall -q plugins.v3 tests scripts
+      - name: 构建安装包
+        run: python scripts/build_release.py --output-dir dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plugin-package
+          path: dist/*.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/CureTMDbAnimeShy_v')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
+        with:
+          name: plugin-package
+          path: dist
+      - name: 发布插件
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -c 'import json, os; v=json.load(open("package.v3.json"))["CureTMDbAnimeShy"]["version"]; assert os.environ["GITHUB_REF_NAME"] == "CureTMDbAnimeShy_v" + v'
+          gh release create "$GITHUB_REF_NAME" dist/*.zip --verify-tag --title "CTMDbA魔改版 ${GITHUB_REF_NAME#CureTMDbAnimeShy_}" --notes-file <(python -c 'import json; p=json.load(open("package.v3.json"))["CureTMDbAnimeShy"]; print(p["history"]["v" + p["version"]])')
